@@ -10,9 +10,9 @@ class AuthService {
   Future<Map<String, dynamic>> login(String identifier, String password) async {
     try {
       final response = await dioClient.post(
-        "/auth/local",
+        "/api/auth/login",
         data: {
-          "identifier": identifier,
+          "email": identifier,
           "password": password,
         },
       );
@@ -29,12 +29,11 @@ class AuthService {
       String username, String email, String password, String fullName) async {
     try {
       final response = await dioClient.post(
-        "/auth/local/register",
+        "/api/auth/signup",
         data: {
-          "username": username,
+          "name": fullName,
           "email": email,
           "password": password,
-          "fullname": fullName, // Ensure this field exists in Strapi
         },
       );
       print('e.response');
@@ -43,4 +42,5 @@ class AuthService {
       // print(e?.response);
       throw e;
     }
-  }}
+  }
+}

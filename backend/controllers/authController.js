@@ -31,6 +31,19 @@ exports.login = async (req, res) => {
 };
 
 exports.resetPassword = async (req, res) => {
-  // Implement email sending and token logic as needed
-  res.status(501).json({ error: 'Not implemented' });
+  try {
+    const { email } = req.body;
+    if (!email || !email.endsWith('@truestim.com')) {
+      return res.status(400).json({ error: 'Only truestim.com email addresses are allowed.' });
+    }
+    const user = await User.findOne({ where: { email } });
+    if (!user) {
+      return res.status(404).json({ error: 'User not found.' });
+    }
+    // Here you would generate a reset token and send an email
+    // For now, just return success
+    return res.json({ message: 'Password reset request accepted for truestim.com email.' });
+  } catch (err) {
+    res.status(500).json({ error: 'Password reset failed' });
+  }
 }; 

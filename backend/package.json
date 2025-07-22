@@ -1,0 +1,20 @@
+{
+  "name": "glowpulse-backend",
+  "version": "1.0.0",
+  "description": "Backend API for Glowpulse app",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "sequelize": "^6.32.1",
+    "mysql2": "^3.9.7",
+    "jsonwebtoken": "^9.0.2",
+    "bcryptjs": "^2.4.3",
+    "dotenv": "^16.4.5",
+    "multer": "^1.4.5-lts.1",
+    "cors": "^2.8.5",
+    "firebase-admin": "^12.0.0"
+  }
+} 

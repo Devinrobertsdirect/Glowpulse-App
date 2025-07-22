@@ -5,7 +5,7 @@ class DioClient {
 
   DioClient(this.dio) {
     dio.options = BaseOptions(
-      baseUrl: "http://192.168.10.4:1337/api",
+      baseUrl: "https://YOUR-BACKEND-URL/api",
       connectTimeout: const Duration(seconds: 60),
       receiveTimeout: const Duration(seconds: 60),
       headers: {"Content-Type": "application/json"},
