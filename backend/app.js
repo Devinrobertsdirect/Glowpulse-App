@@ -82,6 +82,41 @@ app.post('/api/auth/signup', (req, res) => {
   });
 });
 
+// Admin endpoint to approve users
+app.post('/api/admin/approve-user', (req, res) => {
+  const { email, approved } = req.body;
+  
+  // Find user by email
+  const user = users.find(u => u.email === email);
+  
+  if (!user) {
+    return res.status(404).json({ error: { message: 'User not found' } });
+  }
+  
+  // Update approval status
+  user.approved = approved;
+  user.updatedAt = new Date();
+  
+  res.json({
+    user: user,
+    message: `User ${approved ? 'approved' : 'rejected'} successfully`
+  });
+});
+
+// Admin endpoint to list all users
+app.get('/api/admin/users', (req, res) => {
+  const userList = users.map(user => ({
+    id: user.id,
+    email: user.email,
+    fullname: user.fullname,
+    approved: user.approved,
+    createdAt: user.createdAt,
+    updatedAt: user.updatedAt
+  }));
+  
+  res.json({ users: userList });
+});
+
 app.get('/', (req, res) => {
   res.send('Health Device Backend API');
 });
