@@ -5,7 +5,8 @@ class DioClient {
 
   DioClient(this.dio) {
     dio.options = BaseOptions(
-      baseUrl: "https://YOUR-BACKEND-URL/api",
+      // Use your machine's LAN IP so physical devices can reach the backend
+      baseUrl: "http://10.0.0.39:3000/api",
       connectTimeout: const Duration(seconds: 60),
       receiveTimeout: const Duration(seconds: 60),
       headers: {"Content-Type": "application/json"},
@@ -26,18 +27,31 @@ class DioClient {
     try {
       return await dio.post(url, data: data);
     } on DioException catch (e) {
-      // Extract meaningful error message
+      // Extract meaningful error message safely for JSON or String bodies
       String errorMessage = "Something went wrong";
 
-      if (e.response != null && e.response?.data != null) {
-        final errorData = e.response?.data;
-        errorMessage = errorData["error"]?["message"] ?? "Unexpected error";
+      if (e.response != null) {
+        final body = e.response!.data;
+        if (body is Map<String, dynamic>) {
+          final maybeMessage = body["error"] is Map<String, dynamic>
+              ? (body["error"]["message"] as String?)
+              : (body["message"] as String?);
+          if (maybeMessage != null && maybeMessage.isNotEmpty) {
+            errorMessage = maybeMessage;
+          } else {
+            errorMessage = "Error: ${e.response!.statusCode} ${e.response!.statusMessage}";
+          }
+        } else if (body is String) {
+          // Truncate long HTML/text errors
+          errorMessage = body.length > 140 ? body.substring(0, 140) + '…' : body;
+        } else {
+          errorMessage = "Error: ${e.response!.statusCode} ${e.response!.statusMessage}";
+        }
+      } else if (e.message != null) {
+        errorMessage = e.message!;
       }
 
-      print("DioException: $errorMessage");
-
-      // Throw a custom exception with the extracted message
-      throw errorMessage;
+      throw Exception(errorMessage);
     }
   }
 
