@@ -1,4 +1,5 @@
 import 'package:health_device/src/features/tasks/models/task.dart';
+import 'package:dio/dio.dart';
 
 class TaskService {
   // Backend integration

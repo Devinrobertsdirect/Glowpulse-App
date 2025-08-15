@@ -1,9 +1,12 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:health_device/src/features/tasks/models/task.dart';
 import 'package:health_device/src/features/tasks/services/task_service.dart';
+import 'package:health_device/src/core/network/dio_client.dart';
+import 'package:dio/dio.dart';
 
 final taskServiceProvider = Provider<TaskService>((ref) {
-  final dio = DioClient.getInstance();
+  final dio = Dio();
+  final dioClient = DioClient(dio);
   return TaskService(dio: dio, baseUrl: DioClient.baseUrl, authToken: 'mock-jwt-token');
 });
 

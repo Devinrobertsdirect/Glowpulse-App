@@ -1,4 +1,5 @@
 import 'package:health_device/src/features/finance/models/expense.dart';
+import 'package:dio/dio.dart';
 
 class FinanceService {
   // Backend integration

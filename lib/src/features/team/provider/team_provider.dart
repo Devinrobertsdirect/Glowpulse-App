@@ -1,9 +1,12 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:health_device/src/features/team/models/team_member.dart';
 import 'package:health_device/src/features/team/services/team_service.dart';
+import 'package:health_device/src/core/network/dio_client.dart';
+import 'package:dio/dio.dart';
 
 final teamServiceProvider = Provider<TeamService>((ref) {
-  final dio = DioClient.getInstance();
+  final dio = Dio();
+  final dioClient = DioClient(dio);
   return TeamService(dio: dio, baseUrl: DioClient.baseUrl, authToken: 'mock-jwt-token');
 });
 

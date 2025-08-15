@@ -1,9 +1,12 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:health_device/src/features/finance/models/expense.dart';
 import 'package:health_device/src/features/finance/services/finance_service.dart';
+import 'package:health_device/src/core/network/dio_client.dart';
+import 'package:dio/dio.dart';
 
 final financeServiceProvider = Provider<FinanceService>((ref) {
-  final dio = DioClient.getInstance();
+  final dio = Dio();
+  final dioClient = DioClient(dio);
   return FinanceService(dio: dio, baseUrl: DioClient.baseUrl, authToken: 'mock-jwt-token');
 });
 

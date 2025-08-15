@@ -1,4 +1,5 @@
 import 'package:health_device/src/features/events/models/event.dart';
+import 'package:dio/dio.dart';
 
 class EventService {
   // Backend integration
