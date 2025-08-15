@@ -5,8 +5,8 @@ class DioClient {
 
   DioClient(this.dio) {
     dio.options = BaseOptions(
-      // Use your machine's LAN IP so physical devices can reach the backend
-      baseUrl: "http://10.0.0.39:3000/api",
+      // Production backend URL - deployed on Render
+      baseUrl: "https://glowpulse-backend.onrender.com/api",
       connectTimeout: const Duration(seconds: 60),
       receiveTimeout: const Duration(seconds: 60),
       headers: {"Content-Type": "application/json"},

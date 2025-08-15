@@ -10,7 +10,7 @@ class AuthService {
   Future<Map<String, dynamic>> login(String identifier, String password) async {
     try {
       final response = await dioClient.post(
-        "/api/auth/login",
+        "/auth/login",
         data: {
           "email": identifier,
           "password": password,
@@ -29,7 +29,7 @@ class AuthService {
       String username, String email, String password, String fullName) async {
     try {
       final response = await dioClient.post(
-        "/api/auth/signup",
+        "/auth/signup",
         data: {
           "name": fullName,
           "email": email,
