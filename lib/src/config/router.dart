@@ -8,6 +8,7 @@ import 'package:health_device/src/features/splash/splash_screen.dart';
 import 'package:health_device/src/features/tabs/home/home.dart';
 import 'package:health_device/src/features/tabs/settings/settings.dart';
 import 'package:health_device/src/features/tabs/tabs.dart';
+import 'package:health_device/src/features/dashboard/dashboard_screen.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../features/auth/provider/auth_provider.dart';
@@ -42,6 +43,7 @@ GoRouter router(Ref ref) {
         path: ResetPasswordScreen.path,
         builder: (context, state) => ResetPasswordScreen(),
       ),
+      GoRoute(path: DashboardScreen.path, builder: (context, state) => DashboardScreen()),
       GoRoute(path: TabsScreen.path, builder: (context, state) => TabsScreen()),
     ],
   );

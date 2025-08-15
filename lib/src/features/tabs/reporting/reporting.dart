@@ -1,33 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:health_device/src/shared/widgets/appButton.dart';
 import 'package:health_device/src/shared/widgets/theme_card.dart';
+import 'package:health_device/src/features/trade_shows/provider/trade_show_provider.dart';
+import 'package:health_device/src/features/shipping/provider/shipping_provider.dart';
 
-class ReportingScreen extends StatefulWidget {
+class ReportingScreen extends ConsumerWidget {
   static final path = '/reporting';
   const ReportingScreen({super.key});
 
   @override
-  State<ReportingScreen> createState() => _ReportingScreenState();
-}
+  Widget build(BuildContext context, WidgetRef ref) {
+    final Widget _verticalSpacer = SizedBox(height: 15.h);
 
-class _ReportingScreenState extends State<ReportingScreen> {
-  final Widget _verticalSpacer = SizedBox(height: 15.h);
-
-  String? selectedValue;
-  final List<String> items = [ 'Travel', 'Meals','Supplies'];
-
-  String? selectedProductTypes;
-  final List<String> productTypes = [ 'Smart Home Suite 2025', 'IoT Bundle','Security Package'];
-
-  @override
-  Widget build(BuildContext context) {
     return Scaffold(
       body: SingleChildScrollView(
         child: Padding(
           padding: EdgeInsets.all(20),
-
           child: SizedBox(
             width: double.infinity,
             child: Column(
@@ -59,10 +50,9 @@ class _ReportingScreenState extends State<ReportingScreen> {
                           padding: EdgeInsets.only(top: 8.h),
                           child: TextFormField(
                             decoration: InputDecoration(
-                              hintText:
-                                  "", // Only specify hint text, other styles come from theme
+                              hintText: "Enter number of sales",
                             ),
-                            keyboardType: TextInputType.emailAddress,
+                            keyboardType: TextInputType.number,
                           ),
                         ),
                         SizedBox(height: 10.h),
@@ -76,29 +66,31 @@ class _ReportingScreenState extends State<ReportingScreen> {
                             border: Border.all(
                               color: Colors.grey.withValues(alpha: 0.4),
                               width: 1,
-                            ), // 1px gray border
+                            ),
                             borderRadius: BorderRadius.circular(4),
                           ),
-                          child:  DropdownButtonHideUnderline(
+                          child: DropdownButtonHideUnderline(
                             child: DropdownButton<String>(
                               isExpanded: true,
-                              hint: Padding(padding: EdgeInsets.only(left: 10),child: const Text("Select product")),
-                              value: selectedProductTypes,
-
+                              hint: Padding(
+                                padding: EdgeInsets.only(left: 10),
+                                child: const Text("Select product"),
+                              ),
+                              value: null,
                               onChanged: (String? newValue) {
-                                setState(() {
-                                  selectedProductTypes= newValue;
-                                });
+                                // Handle selection
                               },
-                              items:
-                              productTypes.map<DropdownMenuItem<String>>((
-                                  String value,
-                                  ) {
+                              items: [
+                                'Smart Home Suite 2025',
+                                'IoT Bundle',
+                                'Security Package'
+                              ].map<DropdownMenuItem<String>>((String value) {
                                 return DropdownMenuItem<String>(
                                   value: value,
                                   child: Padding(
-                                      padding: EdgeInsets.only(left: 10),
-                                      child: Text(value)),
+                                    padding: EdgeInsets.only(left: 10),
+                                    child: Text(value),
+                                  ),
                                 );
                               }).toList(),
                             ),
@@ -113,10 +105,9 @@ class _ReportingScreenState extends State<ReportingScreen> {
                           padding: EdgeInsets.only(top: 8.h),
                           child: TextFormField(
                             decoration: InputDecoration(
-                              hintText:
-                                  "", // Only specify hint text, other styles come from theme
+                              hintText: "Enter total revenue",
                             ),
-                            keyboardType: TextInputType.emailAddress,
+                            keyboardType: TextInputType.number,
                           ),
                         ),
                         SizedBox(height: 30.h),
@@ -125,7 +116,9 @@ class _ReportingScreenState extends State<ReportingScreen> {
                           padding: 12,
                           size: 16,
                           onTap: () {
-                            // context.push(TabsScree.path);
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(content: Text('Sales report submitted!')),
+                            );
                           },
                         ),
                       ],
@@ -146,105 +139,40 @@ class _ReportingScreenState extends State<ReportingScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          "Customer & Reimbursement",
+                          "Trade Show Summary",
                           style: Theme.of(context).textTheme.headlineMedium,
                         ),
                         _verticalSpacer,
-                        Text(
-                          "Customer Name",
-                          style: Theme.of(context).textTheme.bodyMedium,
-                        ),
-                        Padding(
-                          padding: EdgeInsets.only(top: 8.h),
-                          child: TextFormField(
-                            decoration: InputDecoration(
-                              hintText:
-                                  "", // Only specify hint text, other styles come from theme
-                            ),
-                            keyboardType: TextInputType.text,
-                          ),
-                        ),
-                        SizedBox(height: 10.h),
-                        Text(
-                          "Customer Email",
-                          style: Theme.of(context).textTheme.bodyMedium,
-                        ),
-                        Padding(
-                          padding: EdgeInsets.only(top: 8.h),
-                          child: TextFormField(
-                            decoration: InputDecoration(
-                              hintText:
-                                  "", // Only specify hint text, other styles come from theme
-                            ),
-                            keyboardType: TextInputType.emailAddress,
-                          ),
-                        ),
-                        SizedBox(height: 10.h),
-                        Text(
-                          "Expense Type",
-                          style: Theme.of(context).textTheme.bodyMedium,
-                        ),
-                        SizedBox(height: 10.h),
-                        Container(
-                          width: double.infinity,
-                          decoration: BoxDecoration(
-                            border: Border.all(
-                              color: Colors.grey.withValues(alpha: 0.4),
-                              width: 1,
-                            ), // 1px gray border
-                            borderRadius: BorderRadius.circular(4),
-                          ),
-                          child:  DropdownButtonHideUnderline(
-                            child: DropdownButton<String>(
-                              isExpanded: true,
-                              hint: Padding(
-                                  padding: EdgeInsets.only(left: 10),
-                                child: const Text("Select type"),
-                              ),
-                              value: selectedValue,
+                        Consumer(
+                          builder: (context, ref, child) {
+                            final bookingsAsync = ref.watch(userBookingsProvider);
+                            final shippingAsync = ref.watch(userShippingOrdersProvider);
                             
-                              onChanged: (String? newValue) {
-                                setState(() {
-                                  selectedValue = newValue;
-                                });
-                              },
-                              items:
-                                  items.map<DropdownMenuItem<String>>((
-                                    String value,
-                                  ) {
-                                    return DropdownMenuItem<String>(
-                                      value: value,
-                                      child: Padding(
-                                          padding: EdgeInsets.only(left: 10),
-                                          child: Text(value)),
-                                    );
-                                  }).toList(),
-                            ),
-                          ),
-                        ),
-
-                        SizedBox(height: 10.h),
-                        Text(
-                          "Amount (\$)",
-                          style: Theme.of(context).textTheme.bodyMedium,
-                        ),
-                        Padding(
-                          padding: EdgeInsets.only(top: 8.h),
-                          child: TextFormField(
-                            decoration: InputDecoration(
-                              hintText:
-                                  "", // Only specify hint text, other styles come from theme
-                            ),
-                            keyboardType: TextInputType.number,
-                          ),
-                        ),
-                        SizedBox(height: 30.h),
-                        AppButton(
-                          title: 'Submit Reimbursement',
-                          padding: 12,
-                          size: 16,
-                          onTap: () {
-                            // context.push(TabsScree.path);
+                            return Column(
+                              children: [
+                                bookingsAsync.when(
+                                  data: (bookings) => _buildSummaryCard(
+                                    'Active Bookings',
+                                    '${bookings.length}',
+                                    Icons.event,
+                                    context,
+                                  ),
+                                  loading: () => CircularProgressIndicator(),
+                                  error: (error, stack) => Text('Error: $error'),
+                                ),
+                                SizedBox(height: 15.h),
+                                shippingAsync.when(
+                                  data: (orders) => _buildSummaryCard(
+                                    'Shipping Orders',
+                                    '${orders.length}',
+                                    Icons.local_shipping,
+                                    context,
+                                  ),
+                                  loading: () => CircularProgressIndicator(),
+                                  error: (error, stack) => Text('Error: $error'),
+                                ),
+                              ],
+                            );
                           },
                         ),
                       ],
@@ -255,6 +183,44 @@ class _ReportingScreenState extends State<ReportingScreen> {
             ),
           ),
         ),
+      ),
+    );
+  }
+
+  Widget _buildSummaryCard(String title, String value, IconData icon, BuildContext context) {
+    return Container(
+      width: double.infinity,
+      padding: EdgeInsets.all(15.h),
+      decoration: BoxDecoration(
+        color: Theme.of(context).primaryColor.withOpacity(0.1),
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(
+          color: Theme.of(context).primaryColor.withOpacity(0.3),
+        ),
+      ),
+      child: Row(
+        children: [
+          Icon(icon, color: Theme.of(context).primaryColor, size: 24),
+          SizedBox(width: 20.w),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  title,
+                  style: Theme.of(context).textTheme.bodyMedium,
+                ),
+                Text(
+                  value,
+                  style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                    color: Theme.of(context).primaryColor,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }

@@ -9,6 +9,7 @@ import 'package:health_device/src/features/tabs/inventory/inventory.dart';
 import 'package:health_device/src/features/tabs/profile/profile.dart';
 import 'package:health_device/src/features/tabs/reporting/reporting.dart';
 import 'package:health_device/src/features/tabs/settings/settings.dart';
+import 'package:health_device/src/features/dashboard/dashboard_screen.dart';
 import 'package:health_device/src/shared/widgets/appbar.dart';
 
 class TabsScreen extends ConsumerStatefulWidget {
@@ -31,6 +32,7 @@ class _TabsScreenState extends ConsumerState<TabsScreen> {
 
   _getNavItems(UserType userType) {
     List<BottomNavigationBarItem> navItems = [
+      BottomNavigationBarItem(icon: Icon(Icons.dashboard), label: 'Dashboard'),
       BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
       BottomNavigationBarItem(
         icon: Icon(Icons.insert_chart_outlined),
@@ -52,6 +54,7 @@ class _TabsScreenState extends ConsumerState<TabsScreen> {
 
   _getPages(int index, UserType userType) {
     final List<Widget> pages = [
+      Center(child: DashboardScreen()),
       Center(child: HomeScreen()),
       Center(child: ReportingScreen()),
       userType == UserType.user

@@ -10,6 +10,7 @@ import 'package:health_device/src/features/auth/presentation/login.dart';
 import 'package:health_device/src/features/auth/provider/auth_provider.dart';
 import 'package:health_device/src/shared/widgets/appbar.dart';
 import 'package:health_device/src/shared/widgets/theme_card.dart';
+import 'package:health_device/src/application/providers/theme_provider.dart';
 
 class SettingsScreen extends ConsumerStatefulWidget {
   static final path = '/settings-page';
@@ -22,7 +23,6 @@ class SettingsScreen extends ConsumerStatefulWidget {
 
 class _SettingsScreenState extends ConsumerState<SettingsScreen> {
   bool isNotificationOn = true;
-  bool isDarkModeOn = true;
   final Widget _divider = Divider(height: 0.1);
 
   @override
@@ -72,23 +72,26 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                         context,
                       ),
                       // _divider,
-                      singSettingRow(
-                        Icon(
-                          Icons.nightlight_round_rounded,
-                          color: AppTheme.textColorGray,
-                          size: 20,
-                        ),
-                        "Dark Mode",
-                        "Switch to dark theme",
-                        Switch(
-                          value: isDarkModeOn,
-                          onChanged: (value) {
-                            setState(() {
-                              isDarkModeOn = value;
-                            });
-                          },
-                        ),
-                        context,
+                      Consumer(
+                        builder: (context, ref, child) {
+                          final isDarkMode = ref.watch(themeProvider);
+                          return singSettingRow(
+                            Icon(
+                              Icons.nightlight_round_rounded,
+                              color: AppTheme.textColorGray,
+                              size: 20,
+                            ),
+                            "Dark Mode",
+                            "Switch to dark theme",
+                            Switch(
+                              value: isDarkMode,
+                              onChanged: (value) {
+                                ref.read(themeProvider.notifier).setTheme(value);
+                              },
+                            ),
+                            context,
+                          );
+                        },
                       ),
                       // _divider,
                       Material(

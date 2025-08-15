@@ -1,16 +1,50 @@
 import 'package:dio/dio.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class DioClient {
   final Dio dio;
+  static const String baseUrl = 'https://glowpulse-backend.onrender.com/api';
+  static const String wsUrl = 'wss://glowpulse-backend.onrender.com/ws';
 
   DioClient(this.dio) {
     dio.options = BaseOptions(
-      // Production backend URL - deployed on Render
-      baseUrl: "https://glowpulse-backend.onrender.com/api",
+      baseUrl: baseUrl,
       connectTimeout: const Duration(seconds: 60),
       receiveTimeout: const Duration(seconds: 60),
       headers: {"Content-Type": "application/json"},
     );
+    
+    // Add authentication interceptor
+    dio.interceptors.add(InterceptorsWrapper(
+      onRequest: (options, handler) async {
+        const storage = FlutterSecureStorage();
+        final token = await storage.read(key: 'auth_token');
+        if (token != null) {
+          options.headers['Authorization'] = 'Bearer $token';
+        }
+        handler.next(options);
+      },
+      onError: (error, handler) {
+        if (error.response?.statusCode == 401) {
+          // Handle unauthorized access
+          print('Unauthorized access - token may be expired');
+        }
+        handler.next(error);
+      },
+    ));
+  }
+  
+  /// Get authenticated Dio instance with token
+  static Dio getInstanceWithToken(String token) {
+    return Dio(BaseOptions(
+      baseUrl: baseUrl,
+      connectTimeout: const Duration(seconds: 60),
+      receiveTimeout: const Duration(seconds: 60),
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token',
+      },
+    ));
   }
 
   /// GET request

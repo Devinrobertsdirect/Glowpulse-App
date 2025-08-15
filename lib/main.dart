@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:health_device/src/features/auth/provider/auth_provider.dart';
+import 'package:health_device/src/application/providers/theme_provider.dart';
 
 import 'src/config/router.dart';
 import 'src/config/theme.dart';
@@ -24,11 +25,15 @@ class MyApp extends ConsumerWidget {
       minTextAdapt: true,
       splitScreenMode: true,
       builder: (_, child) {
-        return MaterialApp.router(
-          title: 'Glowpulse',
-          theme: AppTheme.lightTheme,
-          darkTheme: AppTheme.darkTheme,
-          routerConfig: router,
+        return Consumer(
+          builder: (context, ref, child) {
+            final currentTheme = ref.watch(currentThemeProvider);
+            return MaterialApp.router(
+              title: 'Glowpulse',
+              theme: currentTheme,
+              routerConfig: router,
+            );
+          },
         );
       },
     );
