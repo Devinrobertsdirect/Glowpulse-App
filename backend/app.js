@@ -57,7 +57,7 @@ app.post('/api/auth/signup', (req, res) => {
     return res.status(400).json({ error: { message: 'User already exists' } });
   }
   
-  // Create new user with password
+  // Create new user with password - automatically approved
   const newUser = {
     id: users.length + 1,
     documentId: `doc-${users.length + 1}`,
@@ -66,7 +66,7 @@ app.post('/api/auth/signup', (req, res) => {
     provider: 'local',
     fullname: name,
     password: password, // Store password for authentication
-    approved: false, // Requires admin approval
+    approved: true, // Automatically approved - no admin approval needed
     confirmed: true,
     blocked: false,
     createdAt: new Date(),
@@ -78,44 +78,11 @@ app.post('/api/auth/signup', (req, res) => {
   
   res.json({
     user: newUser,
-    message: 'User created successfully, waiting for approval'
+    message: 'User created successfully and approved!'
   });
 });
 
-// Admin endpoint to approve users
-app.post('/api/admin/approve-user', (req, res) => {
-  const { email, approved } = req.body;
-  
-  // Find user by email
-  const user = users.find(u => u.email === email);
-  
-  if (!user) {
-    return res.status(404).json({ error: { message: 'User not found' } });
-  }
-  
-  // Update approval status
-  user.approved = approved;
-  user.updatedAt = new Date();
-  
-  res.json({
-    user: user,
-    message: `User ${approved ? 'approved' : 'rejected'} successfully`
-  });
-});
-
-// Admin endpoint to list all users
-app.get('/api/admin/users', (req, res) => {
-  const userList = users.map(user => ({
-    id: user.id,
-    email: user.email,
-    fullname: user.fullname,
-    approved: user.approved,
-    createdAt: user.createdAt,
-    updatedAt: user.updatedAt
-  }));
-  
-  res.json({ users: userList });
-});
+// Note: Admin approval removed - all users are automatically approved
 
 app.get('/', (req, res) => {
   res.send('Health Device Backend API');
